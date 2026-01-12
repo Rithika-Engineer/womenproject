@@ -1,0 +1,204 @@
+/* Remove browser spacing */
+*{
+  box-sizing: border-box;
+}
+
+body{
+  margin:0;
+  background:#f2f2f2;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* FULL SCREEN APP */
+.app{
+  height:100vh;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  background:white;
+}
+
+/* HEADER BAR */
+.app-header{
+  height:60px;
+  width:100%;
+  background:#d32f2f;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:bold;
+  letter-spacing:0.5px;
+}
+
+/* MAIN AREA */
+.app-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* STATUS TAG */
+.status-bar{
+  margin-bottom:15px;
+  font-size:14px;
+  padding:8px 12px;
+  border-radius:10px;
+}
+
+.onlineBox{
+  background:#e8f5e9;
+  color:#1b5e20;
+}
+
+.offlineBox{
+  background:#ffebee;
+  color:#b71c1c;
+}
+
+/* SOS BIG BUTTON */
+.sos-btn{
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  border:none;
+  background:#ff1744;
+  color:white;
+  font-size:32px;
+  font-weight:bold;
+  margin:25px 0;
+  box-shadow:0 15px 25px rgba(0,0,0,.25);
+}
+
+/* OTHER BUTTONS */
+.action-btn{
+  width:90%;
+  max-width:380px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  margin-bottom:12px;
+  color:white;
+}
+
+.siren-btn{
+  background:#1976d2;
+}
+
+.contacts-btn{
+  background:#ef6c00;
+}
+
+/* BOTTOM NAV BAR */
+.bottom-nav{
+  height:55px;
+  width:100%;
+  background:#ffffff;
+  border-top:1px solid #ddd;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:13px;
+  color:#666;
+}
+
+/* POPUP OVERLAY */
+.popup-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* POPUP CARD */
+.popup-box{
+  background:white;
+  width:92%;
+  max-width:380px;
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.popup-box h2{
+  color:#c62828;
+}
+
+/* POPUP BUTTONS */
+.yes-btn{
+  background:#c62828;
+  color:white;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:12px;
+  font-size:16px;
+  margin-bottom:10px;
+}
+
+.cancel-btn{
+  background:#9e9e9e;
+  color:white;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:12px;
+  font-size:16px;
+}
+
+/* TOAST MESSAGE */
+.success-box{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#2e7d32;
+  color:white;
+  padding:14px 18px;
+  border-radius:12px;
+  font-size:15px;
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+/* ==== TEXT COLOR RESET (IMPORTANT) ==== */
+
+/* Default text everywhere */
+body, .app, .app-body, .popup-box, .bottom-nav {
+  color:#222222 !important;   /* dark gray text */
+}
+
+/* Header text */
+.app-header{
+  color:#ffffff !important;
+}
+
+/* Buttons text = white ONLY in buttons */
+button, 
+.sos-btn,
+.siren-btn,
+.contacts-btn,
+.yes-btn,
+.cancel-btn {
+  color:#ffffff !important;
+}
+
+/* Status text colors */
+.onlineBox{
+  color:#1b5e20 !important;
+}
+
+.offlineBox{
+  color:#b71c1c !important;
+}
+
+/* Success toast text */
+.success-box{
+  color:#ffffff !important;
+}
