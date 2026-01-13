@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import "./Home.css";
+
 
 function Home() {
 
@@ -32,18 +34,56 @@ function Home() {
       window.removeEventListener("offline", off);
     };
   }, []);
+  useEffect(() => {
+  const sendPendingSOS = async () => {
+    const pendingSOS = JSON.parse(localStorage.getItem("pendingSOS")) || [];
+
+    if (pendingSOS.length === 0) return;
+
+    for (const sos of pendingSOS) {
+      try {
+        await fetch("http://localhost:5000/api/sos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(sos)
+        });
+      } catch (err) {
+        console.error("Failed to resend SOS", err);
+        return;
+      }
+    }
+
+    localStorage.removeItem("pendingSOS");
+    console.log("✅ Pending SOS sent");
+  };
+
+  if (isOnline) {
+    sendPendingSOS();
+  }
+}, [isOnline]);
+
 
   // Siren toggle
   const toggleSiren = () => {
-    if (!sirenOn) {
-      sirenRef.current.play();
-      setSirenOn(true);
-    } else {
-      sirenRef.current.pause();
-      sirenRef.current.currentTime = 0;
-      setSirenOn(false);
-    }
-  };
+  if (!sirenOn) {
+    // 🔊 play siren
+    sirenRef.current.play();
+    setSirenOn(true);
+
+    // 🔗 BACKEND CONNECTION (LOG SIREN)
+    fetch("http://localhost:5000/api/siren", {
+      method: "POST"
+    }).catch((err) => console.error(err));
+
+  } else {
+    // 🔇 stop siren
+    sirenRef.current.pause();
+    sirenRef.current.currentTime = 0;
+    setSirenOn(false);
+  }
+};
 
   // When SOS popup opens — get location
   const openPopup = () => {
@@ -62,28 +102,73 @@ function Home() {
     }
   };
 
-  // YES — Send SOS
-  const handleSendSOS = () => {
+// YES — Send SOS
+const handleSendSOS = async () => {
 
-    // vibrate feedback
-    if (navigator.vibrate) {
-      navigator.vibrate([300, 200, 300]);
-    }
+  // vibrate feedback
+  if (navigator.vibrate) {
+    navigator.vibrate([300, 200, 300]);
+  }
 
-    setShowPopup(false);
-    setShowSuccess(true);
+  setShowPopup(false);
+  setShowSuccess(true);
 
-    if (isOnline)
-      setStatusText("✅ SOS Sent Successfully");
-    else
-      setStatusText("📦 SOS Stored — Will Send Later");
-
-    setTimeout(() => {
-      setShowSuccess(false);
-      setStatusText("");
-    }, 3000);
+  // 🔹 Prepare SOS data
+  const sosData = {
+    time: new Date().toISOString(),
+    location: location
+      ? { lat: location.lat, lng: location.lng }
+      : null,
+    contacts: contacts,
+    message: "Emergency SOS triggered"
   };
 
+  // 🔹 IF ONLINE → send to backend
+  if (isOnline) {
+    try {
+      const response = await fetch("http://localhost:5000/api/sos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(sosData)
+      });
+
+      const data = await response.json();
+      setStatusText("✅ " + data.msg);
+    } catch (error) {
+      console.error(error);
+      setStatusText("❌ Backend not reachable");
+    }
+  }
+  // 🔹 IF OFFLINE → store locally
+  else {
+    
+  const pendingSOS = JSON.parse(localStorage.getItem("pendingSOS")) || [];
+
+  pendingSOS.push({
+    message: "Emergency SOS triggered",
+    location,
+    contacts,
+    time: new Date().toISOString()
+  });
+
+  localStorage.setItem("pendingSOS", JSON.stringify(pendingSOS));
+
+  setStatusText("📦 SOS stored — will send when online");
+}
+
+  
+
+  setTimeout(() => {
+    setShowSuccess(false);
+    setStatusText("");
+  }, 3000);
+};
+
+
+
+  
   return (
     <div className="app">
 

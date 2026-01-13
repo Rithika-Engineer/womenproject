@@ -1,20 +1,21 @@
 import React from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from "./Home.jsx";
-import Contacts from "./Contacts.jsx";
+import Home from "./Home";
+import Contacts from "./Contacts"; // if you have this file
+import Admin from "./Admin";
+
 
 function App() {
   return (
-    <div className="screen">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contacts" element={<Contacts />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/contacts" element={<Contacts />} />
+        <Route path="/admin" element={<Admin />} />
+
+      </Routes>
+    </Router>
   );
 }
 
